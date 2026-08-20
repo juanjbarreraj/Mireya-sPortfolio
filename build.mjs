@@ -124,7 +124,8 @@ ${alt}
 <meta property="og:type" content="website">
 <meta property="og:image" content="${site.domain}/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="${rel}assets/img/logo.svg">
+<link rel="icon" type="image/png" href="${rel}assets/img/brand/favicon.png">
+<link rel="apple-touch-icon" href="${rel}assets/img/brand/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Trochut:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -540,8 +541,8 @@ function notFoundPage() {
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>404 — ${site.name}</title>
 <meta name="robots" content="noindex">
-<link rel="icon" type="image/svg+xml" href="/assets/img/logo.svg">
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="/assets/img/brand/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Trochut:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
