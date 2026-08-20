@@ -69,8 +69,9 @@ a { color: var(--blue); }
   padding-top: 10px; padding-bottom: 10px;
 }
 .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
-/* mireya1.GIF at rest → mireya2.GIF on hover (same canvas size, smooth crossfade) */
-.logo-gif { position: relative; display: inline-block; width: 64px; aspect-ratio: 3 / 2; }
+/* mireya1.GIF at rest → mireya2.GIF on hover (same canvas size, smooth crossfade).
+   Oversized on purpose — her avatar pops out of the header bar. */
+.logo-gif { position: relative; display: inline-block; width: 108px; aspect-ratio: 3 / 2; margin: -8px 0 -18px; z-index: 2; }
 .logo-gif img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; transition: opacity .35s ease; }
 .logo-gif .g2 { opacity: 0; }
 .logo:hover .logo-gif .g2, .logo:focus-visible .logo-gif .g2 { opacity: 1; }
@@ -325,7 +326,7 @@ section { padding: clamp(8px, 2vw, 24px) 0; }
 }
 @media (max-width: 680px) {
   .site-header .wrap { flex-wrap: wrap; }
-  .logo-gif { width: 46px; }
+  .logo-gif { width: 72px; margin: -4px 0 -12px; }
   .logo .wordmark-sm { height: 20px; }
   .nav-toggle {
     display: grid; place-items: center; margin-left: auto;
