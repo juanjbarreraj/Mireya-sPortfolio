@@ -1,0 +1,19 @@
+# Netlify configuration for Mireya Rojas Fenoy's portfolio.
+# With this file committed, Netlify picks up everything automatically —
+# no values to type in the UI.
+
+[build]
+  command = "node build.mjs"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Send the bare domain to the language-detecting root page is automatic
+# (dist/index.html). 404s use dist/404.html automatically as well.
+
+# Long cache for hashed-free static assets is fine to keep modest:
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

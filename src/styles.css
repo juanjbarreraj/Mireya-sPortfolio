@@ -1,0 +1,511 @@
+/* ==========================================================
+   MIREYA ROJAS — PORTFOLIO STYLES
+   Palette + type from Mireya's layout PDF:
+   · Titles: Acumin Variable Concept Black → web substitute: Archivo Black
+   · Text:   Myriad Variable Concept     → web substitute: Source Sans 3
+   · Main colors: red / yellow / cream, playful accents for details
+   ========================================================== */
+
+:root {
+  --red:    #FF2B1F;
+  --yellow: #FFD21F;
+  --cream:  #F4EAD5;
+  --cyan:   #56CCF2;
+  --pink:   #FF4FC3;
+  --green:  #2FBF71;
+  --orange: #FF8A00;
+  --blue:   #2D6CDF;
+  --ink:    #141414;
+  --paper:  #FFFDF7;
+
+  /* Titles: Trochut (Andreu Balius, Barcelona — Mireya's pick).
+     Body: Source Sans 3 (the free stand-in for Myriad; swap for real
+     Myriad via an Adobe Fonts embed if Mireya has Creative Cloud). */
+  --font-title: "Trochut", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+  --maxw: 1120px;
+  --radius: 18px;
+  --shadow: 0 10px 30px rgba(20,20,20,.12);
+  --wiggle: cubic-bezier(.36,1.64,.44,1);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; overflow-x: clip; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.075rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+img, video { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3 { font-family: var(--font-title); font-weight: 700; line-height: 1.08; margin: 0 0 .5em; letter-spacing: .01em; }
+h1 { font-size: clamp(2.2rem, 6vw, 4rem); }
+h2 { font-size: clamp(1.7rem, 4.4vw, 2.6rem); text-transform: uppercase; }
+h3 { font-size: clamp(1.15rem, 2.6vw, 1.5rem); }
+
+a { color: var(--blue); }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
+
+.skip-link {
+  position: absolute; left: -999px; top: 8px; z-index: 100;
+  background: var(--ink); color: #fff; padding: .6em 1em; border-radius: 8px;
+}
+.skip-link:focus { left: 8px; }
+
+/* ---------------- header / nav ---------------- */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,253,247,.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 3px solid var(--ink);
+}
+.site-header .wrap {
+  display: flex; align-items: center; gap: 18px;
+  padding-top: 10px; padding-bottom: 10px;
+}
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+/* mireya1.GIF at rest → mireya2.GIF on hover (same canvas size, smooth crossfade) */
+.logo-gif { position: relative; display: inline-block; width: 64px; aspect-ratio: 3 / 2; }
+.logo-gif img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; transition: opacity .35s ease; }
+.logo-gif .g2 { opacity: 0; }
+.logo:hover .logo-gif .g2, .logo:focus-visible .logo-gif .g2 { opacity: 1; }
+.logo:hover .logo-gif .g1, .logo:focus-visible .logo-gif .g1 { opacity: 0; }
+.logo .wordmark-sm { height: 30px; width: auto; }
+
+.main-nav { margin-left: auto; }
+.main-nav ul { display: flex; align-items: center; gap: clamp(10px, 2.4vw, 26px); list-style: none; margin: 0; padding: 0; }
+.main-nav a {
+  position: relative; text-decoration: none; color: var(--ink);
+  font-weight: 700; font-size: .98rem; padding: 6px 2px; white-space: nowrap;
+}
+/* Mireya's animated doodle underline appears on hover */
+.nav-doodle {
+  position: absolute; left: 0; right: 0; bottom: -7px; width: 100%; height: 8px;
+  object-fit: fill; opacity: 0; transform: scaleX(.6);
+  transition: opacity .2s ease, transform .25s var(--wiggle); pointer-events: none;
+}
+.main-nav a:hover .nav-doodle, .main-nav a:focus-visible .nav-doodle,
+.has-sub > button:hover .nav-doodle, .has-sub > button[aria-expanded="true"] .nav-doodle,
+.main-nav a[aria-current="true"] .nav-doodle { opacity: 1; transform: scaleX(1); }
+
+/* Animation dropdown (pop-down per wireframe) */
+.has-sub { position: relative; }
+.has-sub > button {
+  font: inherit; font-weight: 700; background: none; border: 0; cursor: pointer;
+  color: var(--ink); padding: 6px 2px; position: relative; white-space: nowrap;
+}
+.sub {
+  position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(-6px);
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px;
+  box-shadow: var(--shadow); padding: 8px; margin: 0; list-style: none;
+  min-width: 180px; opacity: 0; visibility: hidden; transition: opacity .18s ease, transform .18s ease;
+}
+.has-sub.open .sub, .has-sub:hover .sub, .has-sub:focus-within .sub {
+  opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+}
+.sub a { display: block; padding: 8px 12px; border-radius: 8px; font-weight: 700; }
+.sub a::after { display: none; }
+.sub a:hover, .sub a:focus-visible { background: var(--yellow); }
+
+.header-social { display: flex; align-items: center; gap: 10px; }
+.header-social a { color: var(--ink); display: inline-flex; transition: transform .3s var(--wiggle), color .2s; }
+.header-social a:hover, .header-social a:focus-visible { transform: scale(1.2) rotate(6deg); color: var(--red); }
+.header-social svg { width: 21px; height: 21px; }
+
+.lang-switch {
+  font-family: var(--font-title); font-size: .85rem; text-decoration: none;
+  color: var(--paper); background: var(--ink); border-radius: 999px;
+  padding: 6px 12px; line-height: 1;
+}
+.lang-switch:hover, .lang-switch:focus-visible { background: var(--red); color: #fff; }
+
+.nav-toggle { display: none; }
+
+/* ---------------- hero / showreel ---------------- */
+.hero { padding: clamp(24px, 5vw, 56px) 0 clamp(20px, 4vw, 40px); }
+.hero-inner { text-align: center; }
+.hero h1 { color: var(--red); }
+.hero-name img { width: min(640px, 86%); height: auto; margin: 0 auto; }
+.hero .kicker { font-weight: 700; font-size: clamp(1rem, 2.4vw, 1.3rem); margin: 0 0 1.4em; }
+.reel {
+  position: relative; border: 4px solid var(--ink); border-radius: var(--radius);
+  overflow: hidden; background: #e9e9e9; box-shadow: var(--shadow);
+}
+.reel video, .reel img.poster { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+
+/* ---------------- buttons ---------------- */
+.btn {
+  display: inline-block; font-family: var(--font-body); font-weight: 800; font-size: .9rem;
+  text-transform: uppercase; text-decoration: none; letter-spacing: .14em;
+  color: var(--ink); background: var(--cyan);
+  border: 3px solid var(--ink); border-radius: 999px;
+  padding: .7em 1.6em; cursor: pointer;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform .18s var(--wiggle), box-shadow .18s;
+}
+.btn:hover, .btn:focus-visible { transform: translate(-2px,-2px) rotate(-1deg); box-shadow: 7px 7px 0 var(--ink); }
+.btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+.btn.red { background: var(--red); color: #fff; }
+.btn.yellow { background: var(--yellow); }
+.btn.ghost { background: transparent; box-shadow: none; border-width: 2px; }
+.center { text-align: center; }
+
+/* ---------------- squiggle dividers ---------------- */
+.squiggle { display: block; width: min(520px, 70%); margin: clamp(28px, 5vw, 52px) auto; }
+
+/* ---------------- sections ---------------- */
+section { padding: clamp(8px, 2vw, 24px) 0; }
+.section-head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.section-head h2 { margin: 0; }
+.section-head h2 .dot { color: var(--pink); }
+.section-head p { margin: 0; font-weight: 600; opacity: .85; }
+
+/* ---------------- illustration masonry ---------------- */
+.masonry { columns: 3; column-gap: 16px; }
+.masonry .card { margin: 0 0 16px; break-inside: avoid; }
+.card {
+  display: block; width: 100%; padding: 0; border: 3px solid var(--ink);
+  border-radius: var(--radius); overflow: hidden; background: #fff; cursor: zoom-in;
+  transition: transform .25s var(--wiggle), box-shadow .25s;
+}
+/* “when you hover over the pic, it goes slightly bigger” */
+.card:hover, .card:focus-visible { transform: scale(1.035) rotate(.4deg); box-shadow: var(--shadow); z-index: 2; position: relative; }
+.card img { width: 100%; }
+.card figcaption, .card .card-cap {
+  display: block; font-weight: 700; font-size: .9rem; padding: 8px 12px;
+  border-top: 3px solid var(--ink); background: var(--cream);
+}
+.is-hidden { display: none; }
+.gallery-hint { font-size: .95rem; opacity: .75; margin-top: 4px; }
+
+/* ---------------- animation tiles ---------------- */
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.tile {
+  position: relative; display: block; border: 4px solid var(--ink); border-radius: var(--radius);
+  overflow: hidden; text-decoration: none; aspect-ratio: 4/5; background: var(--ink);
+}
+.tile img.tile-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.tile video.tile-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .3s; }
+/* “dark 30% overlay; transitions to 0% as it opens when hovering” */
+.tile::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.3); transition: background .35s ease; }
+.tile:hover::after, .tile:focus-visible::after { background: rgba(0,0,0,0); }
+.tile:hover img.tile-img { transform: scale(1.06); }
+.tile:hover video.tile-video.playing { opacity: 1; }
+.tile .tile-label {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  font-family: var(--font-title); font-size: clamp(1rem, 2.4vw, 1.4rem);
+  color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.55);
+  padding: 14px 16px; text-transform: uppercase;
+}
+.tile .tile-tag {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  font-weight: 800; font-size: .75rem; text-transform: uppercase; letter-spacing: .06em;
+  background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 3px 10px;
+}
+
+/* ---------------- about (scalloped, cream + blue per wireframe) ---------------- */
+.about { margin-top: clamp(30px, 6vw, 64px); }
+.about-band { position: relative; background: var(--cream); }
+.scallop { display: block; width: 100%; height: 34px; }
+.scallop.flip { transform: scaleY(-1); }
+.about-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(20px, 4vw, 48px);
+  align-items: center; padding: clamp(10px, 3vw, 30px) 0;
+}
+.about h2 { color: var(--red); }
+.about-art { position: relative; }
+.about-art img {
+  border: 4px solid var(--ink); border-radius: 24px; background: var(--cyan);
+  transform: rotate(2deg); box-shadow: var(--shadow);
+}
+
+/* ---------------- contact ---------------- */
+.contact { text-align: center; padding: clamp(36px, 7vw, 72px) 0; }
+.contact h2 { color: var(--red); }
+.contact .arrows { font-size: 1.6rem; letter-spacing: .4em; color: var(--green); }
+.contact-socials { display: flex; justify-content: center; gap: 18px; margin-top: 22px; }
+.contact-socials a { color: var(--ink); transition: transform .3s var(--wiggle), color .2s; }
+.contact-socials a:hover { transform: scale(1.25) rotate(-8deg); color: var(--pink); }
+.contact-socials svg { width: 30px; height: 30px; }
+
+/* ---------------- footer ---------------- */
+.site-footer {
+  border-top: 3px solid var(--ink); background: var(--ink); color: var(--cream);
+  padding: 26px 0; font-size: .95rem;
+}
+.site-footer .wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: space-between; }
+.site-footer a { color: var(--yellow); }
+
+/* ---------------- project pages ---------------- */
+.project-hero { padding-top: clamp(24px, 5vw, 48px); text-align: center; }
+.project-hero h1 { color: var(--red); }
+.project-hero .tagline { font-weight: 700; font-size: 1.15rem; max-width: 46ch; margin: 0 auto 1em; }
+.project-desc { max-width: 62ch; margin: 1.2em auto; }
+.project-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: clamp(20px, 4vw, 40px) 0; }
+.project-gallery .card { cursor: zoom-in; }
+.coming-soon {
+  display: inline-block; background: var(--yellow); border: 3px solid var(--ink);
+  border-radius: 14px; padding: 14px 20px; font-weight: 800; transform: rotate(-1.2deg);
+  box-shadow: 4px 4px 0 var(--ink); margin: 10px 0 4px;
+}
+
+/* ---------------- slideshow ---------------- */
+.slideshow { position: relative; border: 4px solid var(--ink); border-radius: var(--radius); overflow: hidden; margin: 22px 0; background: #fff; }
+.slides-track { display: flex; transition: transform .5s ease; }
+.slides-track > * { flex: 0 0 100%; }
+.slide-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+  width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--ink);
+  background: #fff; cursor: pointer; font-size: 1.15rem; font-weight: 900; line-height: 1;
+  display: grid; place-items: center; transition: transform .2s var(--wiggle), background .2s;
+}
+.slide-btn:hover { transform: translateY(-50%) scale(1.12); background: var(--yellow); }
+.slide-btn.prev { left: 12px; }
+.slide-btn.next { right: 12px; }
+.slideshow:nth-of-type(odd) .slide-btn { color: var(--pink); }
+.slideshow:nth-of-type(even) .slide-btn { color: var(--blue); }
+.slide-dots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 8px; z-index: 3; }
+.slide-dots button { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ink); background: #fff; cursor: pointer; padding: 0; }
+.slide-dots button[aria-current="true"] { background: var(--red); }
+
+/* ---------------- lightbox (“blue background with 80% opacity”) ---------------- */
+.lightbox {
+  position: fixed; inset: 0; z-index: 200; display: none;
+  background: rgba(86, 204, 242, .85);
+  align-items: center; justify-content: center; padding: 4vmin;
+}
+.lightbox.open { display: flex; }
+.lightbox figure { margin: 0; max-width: min(92vw, 1000px); text-align: center; }
+.lightbox img {
+  max-width: 100%; max-height: 78vh; width: auto; margin: 0 auto;
+  border: 4px solid var(--ink); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow);
+}
+.lightbox figcaption { font-weight: 800; margin-top: 12px; font-size: 1.05rem; }
+.lb-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 54px; height: 54px; border-radius: 50%; border: 3px solid var(--ink);
+  background: #fff; font-size: 1.4rem; font-weight: 900; cursor: pointer;
+  display: grid; place-items: center; transition: transform .2s var(--wiggle);
+}
+.lb-btn:hover { transform: translateY(-50%) scale(1.12); background: var(--yellow); }
+.lb-btn.prev { left: max(12px, 3vw); }
+.lb-btn.next { right: max(12px, 3vw); }
+.lb-close {
+  position: absolute; top: 16px; right: 16px; width: 48px; height: 48px;
+  border-radius: 50%; border: 3px solid var(--ink); background: var(--red); color: #fff;
+  font-size: 1.3rem; font-weight: 900; cursor: pointer; display: grid; place-items: center;
+}
+.lb-close:hover { transform: rotate(90deg) scale(1.08); transition: transform .25s var(--wiggle); }
+
+/* ---------------- 404 ---------------- */
+.page-404 { text-align: center; padding: clamp(48px, 10vw, 120px) 0; }
+.page-404 h1 { color: var(--red); }
+
+/* ---------------- reveal-on-scroll ---------------- */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 1080px) {
+  .header-social { display: none; }
+  .logo .wordmark-sm { height: 24px; }
+}
+@media (max-width: 900px) {
+  .masonry { columns: 2; }
+  .tiles { grid-template-columns: 1fr 1fr; }
+  .tiles .tile:last-child { grid-column: 1 / -1; aspect-ratio: 16/9; }
+  .project-gallery { grid-template-columns: 1fr 1fr; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-art { max-width: 360px; margin: 0 auto; }
+}
+@media (max-width: 680px) {
+  .site-header .wrap { flex-wrap: wrap; }
+  .logo-gif { width: 46px; }
+  .logo .wordmark-sm { height: 20px; }
+  .nav-toggle {
+    display: grid; place-items: center; margin-left: auto;
+    width: 46px; height: 46px; border: 3px solid var(--ink); border-radius: 12px;
+    background: var(--yellow); cursor: pointer; font-size: 1.2rem;
+  }
+  .main-nav { display: none; flex-basis: 100%; margin-left: 0; }
+  .main-nav.open { display: block; }
+  .main-nav ul { flex-direction: column; align-items: stretch; gap: 4px; padding: 10px 0; }
+  .main-nav a, .has-sub > button { display: block; width: 100%; text-align: left; padding: 10px 8px; font-size: 1.05rem; }
+  .sub { position: static; transform: none; opacity: 1; visibility: visible; border: 0; box-shadow: none; padding-left: 18px; display: none; }
+  .has-sub.open .sub { display: block; }
+  .header-social { display: none; }
+  .masonry { columns: 2; column-gap: 10px; }
+  .masonry .card { margin-bottom: 10px; }
+  .tiles { grid-template-columns: 1fr; }
+  .tiles .tile { aspect-ratio: 16/10; }
+  .project-gallery { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================
+   v2 — LIVING GALLERY · CURTAIN · SCROLL EFFECTS
+   ========================================================== */
+
+/* full-bleed helper */
+.bleed { width: 100vw; margin-left: calc(50% - 50vw); }
+
+/* ---------------- social icons with doodle underlines ---------------- */
+.social-doodle { position: relative; display: inline-flex; }
+.ico-doodle {
+  position: absolute; left: -3px; right: -3px; bottom: -8px; width: calc(100% + 6px); height: 8px;
+  object-fit: fill; opacity: 0; transition: opacity .2s ease; pointer-events: none;
+}
+.social-doodle:hover .ico-doodle, .social-doodle:focus-visible .ico-doodle { opacity: 1; }
+.contact-socials .ico-doodle { bottom: -11px; height: 10px; }
+
+/* full-bleed gallery — the illustration grid covers the whole page width */
+.wrap-wide { max-width: none; padding-left: clamp(12px, 2vw, 28px); padding-right: clamp(12px, 2vw, 28px); }
+@media (min-width: 1380px) { .wrap-wide .masonry { columns: 4; } }
+@media (max-width: 1379px) and (min-width: 901px) { .wrap-wide .masonry { columns: 3; } }
+
+/* ---------------- static gallery, Mireya twist ---------------- */
+.masonry a.card { text-decoration: none; color: inherit; cursor: pointer; }
+.masonry .card:hover, .masonry .card:focus-visible {
+  transform: scale(1.03) rotate(-.6deg);
+  box-shadow: 7px 9px 0 var(--acc, var(--pink));
+}
+.masonry .card figcaption, .masonry .card .card-cap { border-top: 3px solid var(--acc, var(--ink)); }
+.gallery-clip { position: relative; }
+.fade-veil {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 260px; z-index: 5;
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 16px;
+  background: linear-gradient(180deg, rgba(255,253,247,0) 0%, var(--paper) 72%);
+  pointer-events: none;
+}
+.fade-veil .btn { pointer-events: auto; }
+.fade-veil.gone { display: none; }
+
+/* ---------------- WORD BAND — artistic sliding marquee (Anoosha-style) ---------------- */
+.wordband { overflow: hidden; padding: 16px 0; }
+.wordband .wb-track {
+  display: flex; width: max-content; gap: 2.4rem; align-items: center;
+  animation: wb-slide 30s linear infinite;
+}
+.wordband.reverse .wb-track { animation-direction: reverse; }
+.wordband .w {
+  font-family: var(--font-title); font-size: clamp(1.2rem, 3vw, 1.9rem);
+  text-transform: uppercase; letter-spacing: .03em; white-space: nowrap;
+}
+.wordband .w.c1 { color: var(--red); } .wordband .w.c2 { color: var(--green); }
+.wordband .w.c3 { color: var(--blue); } .wordband .w.c4 { color: var(--pink); }
+.wordband .w.c5 { color: var(--orange); }
+.wordband .star { display: inline-flex; width: 1.1em; height: 1.1em; animation: deco-spin 9s linear infinite; }
+@keyframes wb-slide { to { transform: translateX(-50%); } }
+
+/* ---------------- scalloped squiggle under headings ---------------- */
+.squig-under::after {
+  content: ""; display: block; width: min(240px, 70%); height: 12px; margin-top: 8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M2 9 Q 8 1 14 9 T 26 9 T 38 9 T 50 9 T 62 9 T 74 9 T 86 9 T 98 9 T 110 9 T 118 9' fill='none' stroke='%23FFD21F' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat;
+  background-size: 100% 100%;
+}
+.contact h2.squig-under::after, .project-hero h1.squig-under::after, .illu-page h1.squig-under::after, .hero h1.squig-under::after { margin-inline: auto; }
+
+/* ---------------- illustrated frame around the about portrait ---------------- */
+.fancy-frame {
+  position: relative; padding: 10%; background: #FFD3EC;
+  border-radius: 6px; box-shadow: var(--shadow); transform: rotate(1.5deg);
+}
+.fancy-frame img.frame-art {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; background: none; border-radius: 0;
+}
+.fancy-frame img { border: 0; border-radius: 4px; transform: none; box-shadow: none; background: #fff; width: 100%; }
+
+/* ---------------- little animated details (Anoosha-inspired) ---------------- */
+.deco { position: absolute; pointer-events: none; z-index: 1; }
+.deco svg { width: 100%; height: 100%; }
+.deco.bob   { animation: deco-bob 3.2s ease-in-out infinite alternate; }
+.deco.spin  { animation: deco-spin 7s linear infinite; }
+.deco.pulse { animation: deco-pulse 2.4s ease-in-out infinite alternate; }
+@keyframes deco-bob   { from { transform: translateY(0) rotate(-6deg); } to { transform: translateY(-14px) rotate(8deg); } }
+@keyframes deco-spin  { to { transform: rotate(360deg); } }
+@keyframes deco-pulse { from { transform: scale(.85); opacity: .7; } to { transform: scale(1.15); opacity: 1; } }
+.main-nav a, .main-nav .has-sub > button { display: inline-block; transition: transform .25s var(--wiggle); }
+.main-nav a:hover, .main-nav .has-sub > button:hover { transform: translateY(-2px) rotate(-1.2deg); }
+
+
+/* ---------------- CURTAIN (animation section) ----------------
+   3 full-height vertical panels; the hovered one opens like a
+   curtain while the others shrink — per Mireya's mock. */
+.curtain { display: flex; height: min(92svh, 920px); background: var(--ink); }
+.curtain .tile {
+  flex: 1 1 0; min-width: 0; aspect-ratio: auto; border: 0; border-radius: 0;
+  border-left: 3px solid var(--ink);
+  transition: flex-grow .6s cubic-bezier(.6, .05, .2, 1);
+}
+.curtain .tile:first-child { border-left: 0; }
+.curtain .tile:hover, .curtain .tile:focus-visible { flex-grow: 2.6; }
+.curtain .tile .tile-label {
+  inset: 0; display: grid; place-items: center; padding: 0 8px;
+  font-size: clamp(1.1rem, 2.6vw, 2rem); text-align: center;
+  bottom: auto; left: 0; right: 0; top: 0; height: 100%;
+}
+.curtain .tile .tile-label span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.curtain .tile .tile-tag { top: 20px; left: 50%; transform: translateX(-50%) rotate(-3deg); white-space: nowrap; }
+
+/* ---------------- ILLUSTRATION DETAIL (blue page, per wireframe) ---------------- */
+.illu-page { background: var(--cyan); border-top: 4px solid var(--ink); border-bottom: 4px solid var(--ink); padding: clamp(20px, 4vw, 48px) 0 clamp(28px, 5vw, 56px); position: relative; }
+.illu-page h1 { color: #fff; text-shadow: 2px 3px 0 var(--ink); text-align: center; }
+.illu-stage { position: relative; max-width: 900px; margin: 0 auto; padding: 0 70px; }
+.illu-featured {
+  display: block; width: 100%; max-height: 72vh; object-fit: contain;
+  border: 4px solid var(--ink); border-radius: var(--radius); background: #fff;
+  box-shadow: var(--shadow);
+}
+.illu-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+  width: 54px; height: 54px; border-radius: 50%; cursor: pointer;
+  border: 3px solid var(--ink); background: #fff;
+  font-family: var(--font-title); font-size: 1.5rem;
+  display: grid; place-items: center; transition: transform .2s var(--wiggle), background .2s;
+}
+.illu-arrow:hover, .illu-arrow:focus-visible { transform: translateY(-50%) scale(1.15); background: var(--yellow); }
+.illu-arrow.prev { left: 4px; }
+.illu-arrow.next { right: 4px; }
+.illu-counter { text-align: center; font-weight: 800; color: var(--ink); margin: 12px 0 0; }
+.illu-more { text-align: center; font-weight: 800; margin: clamp(22px, 4vw, 40px) 0 14px; color: var(--ink); }
+.illu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 900px; margin: 0 auto; }
+.illu-grid button {
+  padding: 0; border: 3px solid var(--ink); border-radius: 14px; overflow: hidden;
+  background: #fff; cursor: pointer; transition: transform .25s var(--wiggle), box-shadow .25s;
+}
+.illu-grid button:hover, .illu-grid button:focus-visible { transform: scale(1.05) rotate(.6deg); box-shadow: var(--shadow); }
+.illu-grid button[aria-current="true"] { outline: 4px solid var(--yellow); outline-offset: -4px; }
+.illu-grid img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+.pager { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin: clamp(24px, 4vw, 44px) 0; }
+.pager .btn { font-size: .85rem; }
+
+/* stacked project gallery (6 pics under the video, per wireframe) */
+.project-gallery.stack { grid-template-columns: 1fr; max-width: 840px; margin-left: auto; margin-right: auto; }
+
+/* ---------------- reveal pop (stronger) ---------------- */
+.reveal { opacity: 0; transform: translateY(34px) scale(.97) rotate(-.5deg); transition: opacity .7s ease, transform .7s var(--wiggle); }
+.reveal.in { opacity: 1; transform: none; }
+
+@media (max-width: 680px) {
+  .illu-stage { padding: 0 8px; }
+  .illu-arrow.prev { left: -2px; } .illu-arrow.next { right: -2px; }
+  .illu-grid { grid-template-columns: 1fr 1fr; }
+  .deco { display: none; }
+  .curtain { flex-direction: column; height: auto; }
+  .curtain .tile { border-left: 0; border-top: 3px solid var(--ink); min-height: 30svh; transition: min-height .5s ease; }
+  .curtain .tile:first-child { border-top: 0; }
+  .curtain .tile:hover, .curtain .tile:active { min-height: 44svh; flex-grow: 1; }
+}
+
+/* ---------------- motion preferences ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  .reveal { opacity: 1; transform: none; }
+  .deco { animation: none !important; }
+}
