@@ -77,6 +77,10 @@ function squiggle(color) {
   <path d="M4 13 Q 24 -6 44 13 T 84 13 T 124 13 T 164 13 T 204 13 T 244 13 T 284 13 T 324 13 T 364 13 T 404 13 T 444 13 T 484 13 T 516 13" stroke="${color}" stroke-width="5" stroke-linecap="round"/>
 </svg>`;
 }
+// Mireya's hand-drawn line PNGs, tiled side by side to form a divider.
+function handLine(rel, n) {
+  return `<div class="hand-line bleed" style="background-image:url('${A(rel, '/assets/img/brand/longline' + n + '.PNG')}')" aria-hidden="true"></div>`;
+}
 function scallop(fillVar, flip) {
   let bumps = '';
   for (let i = 0; i < 20; i++) bumps += `<circle cx="${i * 56 + 28}" cy="34" r="30"/>`;
@@ -330,7 +334,7 @@ ${header({ lang, rel, pagePath, active: 'motion' })}
   </div>
 </section>
 
-${squiggle('#FF4FC3')}
+${handLine(rel, 1)}
 
 <!-- ILLUSTRATION — static vertical gallery: white side margins, bottom fade, "see more" -->
 <section id="illustration" aria-labelledby="illu-h">
@@ -369,7 +373,7 @@ ${projects.map((p) => `    <a class="tile" href="${rel}${lang}/work/${p.slug}/">
   </div>
 </section>
 
-${squiggle('#FF8A00')}
+${handLine(rel, 2)}
 
 <!-- WHO AM I — scalloped cream band per wireframe -->
 <section class="about" id="about" aria-labelledby="about-h">
@@ -427,7 +431,7 @@ ${header({ lang, rel, pagePath, active: 'illustration' })}
     <p class="tagline">${t.illustrationIntro}</p>
   </div>
 </section>
-${squiggle('#FF4FC3')}
+${handLine(rel, 1)}
 <section>
   <div class="wrap wrap-wide">
     ${masonryGallery(lang, rel, { visible: illustrations.length })}
