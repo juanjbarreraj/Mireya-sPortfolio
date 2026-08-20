@@ -128,7 +128,7 @@ a { color: var(--blue); }
 .nav-toggle { display: none; }
 
 /* ---------------- hero / showreel ---------------- */
-.hero { padding: clamp(24px, 5vw, 56px) 0 clamp(20px, 4vw, 40px); }
+.hero { padding: clamp(24px, 5vw, 56px) 0 clamp(40px, 7vw, 90px); }
 .hero-inner { text-align: center; }
 .hero h1 { color: var(--red); }
 .hero-name img { width: min(640px, 86%); height: auto; margin: 0 auto; }
@@ -158,13 +158,13 @@ a { color: var(--blue); }
 
 /* ---------------- hand-drawn line dividers (Mireya's longline PNGs) ---------------- */
 .hand-line {
-  height: 16px; margin: clamp(28px, 5vw, 52px) 0;
+  height: 16px; margin: clamp(48px, 8vw, 110px) 0;
   background-repeat: repeat-x; background-size: auto 100%; background-position: center;
 }
 .squiggle { display: block; width: min(520px, 70%); margin: clamp(28px, 5vw, 52px) auto; }
 
 /* ---------------- sections ---------------- */
-section { padding: clamp(8px, 2vw, 24px) 0; }
+section { padding: clamp(36px, 6vw, 96px) 0; }
 .section-head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
 .section-head h2 { margin: 0; }
 .section-head h2 .dot { color: var(--pink); }
@@ -214,7 +214,7 @@ section { padding: clamp(8px, 2vw, 24px) 0; }
 }
 
 /* ---------------- about (scalloped, cream + blue per wireframe) ---------------- */
-.about { margin-top: clamp(30px, 6vw, 64px); }
+.about { margin-top: clamp(48px, 8vw, 110px); }
 .about-band { position: relative; background: var(--cream); }
 .scallop { display: block; width: 100%; height: 34px; }
 .scallop.flip { transform: scaleY(-1); }
@@ -230,7 +230,7 @@ section { padding: clamp(8px, 2vw, 24px) 0; }
 }
 
 /* ---------------- contact ---------------- */
-.contact { text-align: center; padding: clamp(36px, 7vw, 72px) 0; }
+.contact { text-align: center; padding: clamp(64px, 10vw, 140px) 0; }
 .contact h2 { color: var(--red); }
 .contact .arrows { font-size: 1.6rem; letter-spacing: .4em; color: var(--green); }
 .contact-socials { display: flex; justify-content: center; gap: 18px; margin-top: 22px; }
@@ -390,7 +390,7 @@ section { padding: clamp(8px, 2vw, 24px) 0; }
 .fade-veil.gone { display: none; }
 
 /* ---------------- WORD BAND — artistic sliding marquee (Anoosha-style) ---------------- */
-.wordband { overflow: hidden; padding: 16px 0; }
+.wordband { overflow: hidden; padding: 16px 0; margin: clamp(36px, 6vw, 90px) 0; }
 .wordband .wb-track {
   display: flex; width: max-content; gap: 2.4rem; align-items: center;
   animation: wb-slide 30s linear infinite;

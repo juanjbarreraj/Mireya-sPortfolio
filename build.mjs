@@ -343,7 +343,7 @@ ${handLine(rel, 1)}
       <h2 id="illu-h" class="squig-under" style="color:var(--red)">${t.illustrationTitle}</h2>
       <p>${t.illustrationIntro}</p>
     </div>
-    ${masonryGallery(lang, rel, { visible: 6, batch: 6, seemoreLabel: t.viewMore, scope: '#illustration' })}
+    ${masonryGallery(lang, rel, { visible: 14, batch: 8, seemoreLabel: t.viewMore, scope: '#illustration' })}
     <p class="gallery-hint">${t.galleryHint}</p>
   </div>
 </section>
@@ -354,7 +354,7 @@ ${wordband(lang, false)}
 <section id="animation" aria-labelledby="anim-h">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <h2 id="anim-h" class="squig-under" style="color:var(--orange)">${t.animationTitle}</h2>
+      <h2 id="anim-h" style="color:var(--orange)">${t.animationTitle}</h2>
       <p>${t.animationIntro}</p>
     </div>
   </div>
@@ -382,7 +382,7 @@ ${handLine(rel, 2)}
     ${decos('about')}
     <div class="wrap about-grid">
       <div data-reveal>
-        <h2 id="about-h" class="squig-under">${t.aboutTitle}</h2>
+        <h2 id="about-h">${t.aboutTitle}</h2>
         ${t.aboutParas.map((p) => `<p>${p}</p>`).join('\n        ')}
         <p style="margin-top:1.4em"><a class="btn" href="#contact">${t.aboutCta} →</a></p>
       </div>
