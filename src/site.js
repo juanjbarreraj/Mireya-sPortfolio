@@ -1,194 +1,115 @@
-/* Mireya Rojas portfolio — interactions. No dependencies. */
+/* Mireya Rojas Fenoy — portfolio interactions. No dependencies. */
 (function () {
   'use strict';
-  const $ = (s, c) => (c || document).querySelector(s);
-  const $$ = (s, c) => Array.from((c || document).querySelectorAll(s));
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const I18N = window.MR_I18N || { close: 'Close', prev: 'Previous', next: 'Next' };
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canHover = window.matchMedia('(hover: hover)').matches;
 
-  /* ---------- mobile nav ---------- */
-  const toggle = $('.nav-toggle');
-  const nav = $('.main-nav');
-  if (toggle && nav) {
-    toggle.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
+  /* ---------- mobile menu ---------- */
+  var toggle = $('.nav-toggle'), menu = $('.hdr-right');
+  if (toggle && menu) {
+    toggle.addEventListener('click', function () {
+      var open = menu.classList.toggle('open');
       toggle.setAttribute('aria-expanded', String(open));
     });
+    $$('a', menu).forEach(function (a) { a.addEventListener('click', function () { menu.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }); });
   }
 
-  /* ---------- animation dropdown (click + keyboard; hover handled in CSS) ---------- */
-  $$('.has-sub').forEach((li) => {
-    const btn = $(':scope > button', li);
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-      const open = li.classList.toggle('open');
-      btn.setAttribute('aria-expanded', String(open));
+  /* ---------- video players: sound + full screen ---------- */
+  $$('.player').forEach(function (p) {
+    var v = $('video', p); if (!v) return;
+    var snd = $('.snd', p), fs = $('.fs', p);
+    if (snd) snd.addEventListener('click', function () {
+      v.muted = !v.muted;
+      if (!v.muted && v.paused) v.play().catch(function () {});
+      snd.setAttribute('aria-pressed', String(!v.muted));
+      snd.setAttribute('aria-label', v.muted ? snd.dataset.off : snd.dataset.on);
     });
-    li.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { li.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
+    if (fs) fs.addEventListener('click', function () {
+      if (v.requestFullscreen) v.requestFullscreen();
+      else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
     });
-  });
-  document.addEventListener('click', (e) => {
-    $$('.has-sub.open').forEach((li) => {
-      if (!li.contains(e.target)) { li.classList.remove('open'); const b = $(':scope > button', li); if (b) b.setAttribute('aria-expanded', 'false'); }
-    });
+    if (reduced && v.autoplay) { v.pause(); v.controls = true; }
   });
 
-  /* ---------- lightbox (blue 80% bg, arrows — per Mireya's wireframe) ---------- */
-  const lb = $('.lightbox');
-  if (lb) {
-    const lbImg = $('.lightbox img');
-    const lbCap = $('.lightbox figcaption');
-    let items = [];
-    let idx = 0;
-    let lastFocus = null;
+  /* ---------- motion design grid: preview plays on hover ---------- */
+  $$('.vcard').forEach(function (card) {
+    var v = $('video', card); if (!v || !canHover || reduced) return;
+    card.addEventListener('pointerenter', function () {
+      if (!v.src) v.src = v.dataset.src;
+      v.currentTime = 0;
+      v.play().then(function () { card.classList.add('playing'); }).catch(function () {});
+    });
+    card.addEventListener('pointerleave', function () { v.pause(); card.classList.remove('playing'); });
+  });
 
-    function collect(card) {
-      const scope = card.closest('[data-gallery]') || document;
-      // exclude infinite-gallery clones so each artwork appears once
-      return $$('.card[data-full]', scope).filter((c) => !c.closest('[data-clone]'));
-    }
-    function show(i) {
-      idx = (i + items.length) % items.length;
-      const el = items[idx];
-      lbImg.src = el.getAttribute('data-full');
-      lbImg.alt = el.getAttribute('data-caption') || '';
-      lbCap.textContent = el.getAttribute('data-caption') || '';
-    }
-    function open(card) {
-      items = collect(card);
-      lastFocus = card;
-      let i = items.indexOf(card);
-      if (i < 0 && card.dataset.idx !== undefined) i = items.findIndex((o) => o.dataset.idx === card.dataset.idx);
-      show(Math.max(0, i));
-      lb.classList.add('open');
-      document.body.style.overflow = 'hidden';
-      $('.lb-close', lb).focus();
-    }
-    function close() {
-      lb.classList.remove('open');
-      document.body.style.overflow = '';
-      if (lastFocus) lastFocus.focus();
-    }
-    document.addEventListener('click', (e) => {
-      const card = e.target.closest('.card[data-full]');
-      if (card) { e.preventDefault(); open(card); }
-    });
-    document.addEventListener('keydown', (e) => {
-      const card = e.target.closest && e.target.closest('.card[data-full]');
-      if (card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(card); }
-    });
-    $('.lb-close', lb).addEventListener('click', close);
-    $('.lb-btn.prev', lb).addEventListener('click', () => show(idx - 1));
-    $('.lb-btn.next', lb).addEventListener('click', () => show(idx + 1));
-    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
-    document.addEventListener('keydown', (e) => {
-      if (!lb.classList.contains('open')) return;
-      if (e.key === 'Escape') close();
-      if (e.key === 'ArrowLeft') show(idx - 1);
-      if (e.key === 'ArrowRight') show(idx + 1);
-    });
+  /* ---------- about: a new photo fades in every few seconds ---------- */
+  var photos = $('.about-photos');
+  if (photos) {
+    var imgs = $$('img', photos), i = 0, every = +photos.dataset.interval || 3000, timer = null;
+    var load = function (img) { if (img && img.dataset.src && !img.src) img.src = img.dataset.src; };
+    load(imgs[1]);
+    var step = function () {
+      var next = (i + 1) % imgs.length;
+      load(imgs[next]); load(imgs[(next + 1) % imgs.length]);
+      var go = function () { imgs[i].classList.remove('on'); imgs[next].classList.add('on'); i = next; };
+      if (imgs[next].complete && imgs[next].naturalWidth) go(); else imgs[next].addEventListener('load', go, { once: true });
+    };
+    var start = function () { if (!timer && imgs.length > 1 && !reduced) timer = setInterval(step, every); };
+    var stop = function () { clearInterval(timer); timer = null; };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) { en[0].isIntersecting ? start() : stop(); }, { threshold: 0.15 }).observe(photos);
+    } else start();
   }
 
-  /* ---------- hover video on animation tiles ---------- */
-  $$('.tile').forEach((tile) => {
-    const video = $('video.tile-video', tile);
-    if (!video || reduced) return;
-    let ready = false;
-    tile.addEventListener('pointerenter', () => {
-      if (!ready) { video.load(); ready = true; }
-      video.play().then(() => video.classList.add('playing')).catch(() => {});
-    });
-    tile.addEventListener('pointerleave', () => {
-      video.pause(); video.classList.remove('playing');
-    });
-  });
-
-  /* ---------- slideshows: auto-advance + arrows + dots ---------- */
-  $$('.slideshow').forEach((box) => {
-    const track = $('.slides-track', box);
-    const slides = $$(':scope > *', track);
-    if (slides.length < 2) return;
-    let i = 0, timer = null;
-    const dots = $$('.slide-dots button', box);
-    function go(n, user) {
-      i = (n + slides.length) % slides.length;
-      track.style.transform = 'translateX(-' + i * 100 + '%)';
-      dots.forEach((d, di) => d.setAttribute('aria-current', String(di === i)));
-      if (user) restart();
-    }
-    function restart() {
-      if (timer) clearInterval(timer);
-      if (!reduced) timer = setInterval(() => go(i + 1), 4500);
-    }
-    $('.slide-btn.prev', box).addEventListener('click', () => go(i - 1, true));
-    $('.slide-btn.next', box).addEventListener('click', () => go(i + 1, true));
-    dots.forEach((d, di) => d.addEventListener('click', () => go(di, true)));
-    box.addEventListener('pointerenter', () => timer && clearInterval(timer));
-    box.addEventListener('pointerleave', restart);
-    restart();
-  });
-
-  /* ---------- gallery "see more": reveal the next batch, drop the
-     fade veil when everything is visible ---------- */
-  $$('[data-seemore]').forEach((btn) => {
-    const sel = btn.getAttribute('data-seemore');
-    const batch = parseInt(btn.getAttribute('data-batch') || '6', 10);
-    btn.addEventListener('click', () => {
-      const hidden = $$(sel + ' .is-hidden');
-      hidden.slice(0, batch).forEach((el, i) => {
-        el.classList.remove('is-hidden');
-        el.classList.add('reveal');
-        setTimeout(() => el.classList.add('in'), 45 * i);
+  /* ---------- illustration viewer ---------- */
+  var viewer = $('.viewer');
+  if (viewer) {
+    var tiles = $$('.tile');
+    var vImg = $('.v-main img', viewer), vTitle = $('.v-title', viewer), vDesc = $('.v-desc', viewer), vMore = $('.v-more', viewer);
+    var sheet = $('.viewer-sheet', viewer), cur = 0, lastFocus = null;
+    var show = function (n) {
+      cur = (n + tiles.length) % tiles.length;
+      var t = tiles[cur];
+      vImg.src = t.dataset.full; vImg.alt = t.dataset.title;
+      vTitle.textContent = t.dataset.title;
+      vDesc.textContent = t.dataset.desc || '';
+      vDesc.hidden = !t.dataset.desc;
+      vMore.innerHTML = '';
+      (t.dataset.more || '').split('|').filter(Boolean).forEach(function (src) {
+        var im = document.createElement('img'); im.src = src; im.alt = t.dataset.title; im.loading = 'lazy'; vMore.appendChild(im);
       });
-      if (hidden.length <= batch) {
-        const veil = btn.closest('.fade-veil');
-        if (veil) veil.classList.add('gone');
-      }
+      sheet.scrollTop = 0;
+    };
+    var open = function (n) {
+      lastFocus = document.activeElement;
+      show(n); viewer.hidden = false; document.body.style.overflow = 'hidden';
+      $('.v-close', viewer).focus();
+    };
+    var close = function () { viewer.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); };
+    tiles.forEach(function (t, n) { t.addEventListener('click', function () { open(n); }); });
+    $('.v-close', viewer).addEventListener('click', close);
+    $('.v-arrow.prev', viewer).addEventListener('click', function () { show(cur - 1); });
+    $('.v-arrow.next', viewer).addEventListener('click', function () { show(cur + 1); });
+    viewer.addEventListener('click', function (e) { if (e.target === viewer) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (viewer.hidden) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') show(cur - 1);
+      if (e.key === 'ArrowRight') show(cur + 1);
     });
-  });
-
-  /* ---------- illustration detail: arrows cycle the featured image,
-     thumbnails set it (per Mireya's wireframe) ---------- */
-  const stage = $('.illu-stage');
-  if (stage) {
-    const featured = $('.illu-featured', stage);
-    const thumbs = $$('.illu-grid button');
-    const counter = $('.illu-counter');
-    const srcs = thumbs.length ? thumbs.map((b) => $('img', b).getAttribute('src')) : [featured.getAttribute('src')];
-    let i = 0;
-    function setFeatured(n) {
-      i = (n + srcs.length) % srcs.length;
-      featured.src = srcs[i];
-      thumbs.forEach((b, bi) => b.setAttribute('aria-current', String(bi === i)));
-      if (counter) counter.textContent = (i + 1) + ' / ' + srcs.length;
-    }
-    $$('.illu-arrow', stage).forEach((btn) => {
-      btn.addEventListener('click', () => setFeatured(i + (btn.classList.contains('next') ? 1 : -1)));
-    });
-    thumbs.forEach((b, bi) => b.addEventListener('click', () => {
-      setFeatured(bi);
-      featured.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
-    }));
-    document.addEventListener('keydown', (e) => {
-      if ($('.lightbox.open')) return;
-      if (e.key === 'ArrowLeft') setFeatured(i - 1);
-      if (e.key === 'ArrowRight') setFeatured(i + 1);
-    });
-    if (thumbs.length) setFeatured(0);
   }
 
-  /* ---------- reveal on scroll (progressive enhancement: content is
-     visible by default; JS opts elements into the animation) ---------- */
+  /* ---------- gentle reveal on scroll ---------- */
   if (!reduced && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, { threshold: 0.12 });
-    $$('[data-reveal]').forEach((el) => {
-      const r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight && r.bottom > 0) return; // already on screen: skip animation
-      el.classList.add('reveal');
-      io.observe(el);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.1 });
+    $$('.sec-title, .mosaic .tile, .banner, .vcard, .about-text, .contact-panel').forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight) return;           // already visible: don't hide it
+      el.classList.add('reveal'); io.observe(el);
     });
   }
 })();
